@@ -11,6 +11,19 @@ def euclid scaled_properties
   Math.sqrt(sq.inject(0) {|s,c| s + c})
 end
 
+def dijkstra graph
+  path = [0]
+  vert = Array(1..graph.size-1)
+  graph.each_with_index{|v,i| v[i] = Float::INFINITY}
+  until vert.empty?
+    d = vert.collect{|v| graph[path.last][v]}
+    n = graph[path.last].index(d.min)
+    path << n
+    vert.delete n
+  end
+  path
+end 
+
 def durations
   pulses = SecureRandom.random_number(5)+2
   steps = 8
@@ -18,7 +31,6 @@ def durations
   @durations = []
   error = 0
   last = 0
-
   (0..steps-1).each do |i|
     error += pulses
     if error > 0 
@@ -45,20 +57,17 @@ def reload
   query_fingerprint = fingerprints[query_file]
   selection = fingerprints.collect{|f,fp| [f,euclid([query_fingerprint,fp])]}.sort{|a,b| a[1] <=> b[1]}.collect{|i| i[0]}[0..n]
 
-  dist = []
+  graph = []
   selection.each_with_index do |f,i|
-    dist[i] ||= []
+    graph[i] ||= []
     (i..n).each do |j|
-      dist[j] ||= []
+      graph[j] ||= []
       d = euclid([fingerprints[f],fingerprints[selection[j]]])
-      dist[i][j] = d
-      dist[j][i] = d
+      graph[i][j] = d
+      graph[j][i] = d
     end
   end
-  File.open("/tmp/dist.csv","w+") do |f|
-    dist.each_with_index{|dist,i| f.puts dist.join(",")}
-  end
-  @images = `Rscript tsp.R`.split(" ").collect{|v| selection[v.sub('V','').to_i-1]}
+  @images = dijkstra(graph).collect{|n| selection[n]}
 end
 
 def html
@@ -66,14 +75,12 @@ def html
     reload
     durations
     "<html>
-        <head> <meta http-equiv='refresh' CONTENT='5'> </head>
-        <body bgcolor='black' text='white'>
-            <h1 style='text-align:center; font-size: 800%; margin-top: 18%; margin-bottom: 12%'>Magic Numbers</h1>
-            <h2 style='text-align:center'>Try to find the secret meaning!</h2>
-            <!--
-            <p style='text-align:bottom'>  More info at https://github.com/alfadeo/magic_numbers </p>
-            -->
-        </body>
+      <head> <meta http-equiv='refresh' CONTENT='5'> </head>
+      <body bgcolor='black' text='white' style='text-align:center'>
+        <h1 style='font-size:400%; margin-top:18%;'>Magic Numbers</h1>
+        <h2 style='font-size:200%'>Find the secret message!</h2>
+        <p style='margin-top:5%'> &copy; <a href=mailto:void@alfadeo.de>void@alfadeo.de</a>, Source code: <a href=https://github.com/alfadeo/magic_numbers>https://github.com/alfadeo/magic_numbers</a> </p>
+      </body>
     </html>"
   else
     "<html>
