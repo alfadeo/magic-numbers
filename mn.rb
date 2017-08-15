@@ -79,7 +79,7 @@ def html
       <body bgcolor='black' text='white' style='text-align:center'>
         <h1 style='font-size:400%; margin-top:18%;'>Magic Numbers</h1>
         <h2 style='font-size:200%'>Find the secret message!</h2>
-        <p style='margin-top:5%'> &copy; <a href=mailto:void@alfadeo.de>void@alfadeo.de</a>, Source code: <a href=https://github.com/alfadeo/magic_numbers>https://github.com/alfadeo/magic_numbers</a> </p>
+        <p style='margin-top:5%'> &copy; <a href=mailto:void@alfadeo.de>void@alfadeo.de</a>, Source code: <a href=https://github.com/alfadeo/magic-numbers>https://github.com/alfadeo/magic-numbers</a> </p>
       </body>
     </html>"
   else
