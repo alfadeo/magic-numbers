@@ -3,7 +3,7 @@ durations = []
 fingerprints = {}
 slides = []
 wait = 0
-nr_slides = 7
+primes = [5,7,11,13]
 
 function euclid_durations() {
   pulses = Math.floor(Math.random()*5)+2
@@ -48,6 +48,7 @@ function slideshow() {
         distances[i] = euclid_distance(fingerprints[start],fingerprints[images[i]])
       }
       // select nr_slides closest
+      nr_slides = primes[Math.floor(Math.random()*4)]
       closest_idx = []
       for (i=0;i<distances.length;i++) closest_idx[i] = i;
       closest_idx.sort(function (a, b) { return distances[a] < distances[b] ? -1 : distances[a] > distances[b] ? 1 : 0; });
@@ -67,14 +68,11 @@ function slideshow() {
       path = [0]
       vert = []
       for (i=1;i<matrix.length;i++) { vert[i-1] = i }
-console.log(vert);
       while (vert.length > 0) {
         d = vert.map(function(v) { return matrix[path[path.length-1]][v]})
-        console.log(d)
         row = matrix[path[path.length-1]]
         min = Math.min(...d)
         n = row.indexOf(min)
-        console.log(n)
         path.push(n)
         vert.splice(vert.indexOf(n),1)
       }
