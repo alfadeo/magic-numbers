@@ -58,7 +58,7 @@ function slideshow() {
       for (i=0;i<slides.length;i++) { matrix[i] = Array(slides.length) }
       for (i=0;i<slides.length;i++) {
         matrix[i][i] = Number.POSITIVE_INFINITY
-        for(j=i;j<slides.length;j++) {
+        for(j=i+1;j<slides.length;j++) {
           d = euclid_distance(fingerprints[slides[i]],fingerprints[slides[j]])
           matrix[i][j] = d
           matrix[j][i] = d
